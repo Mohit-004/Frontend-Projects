@@ -1,0 +1,61 @@
+body{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow';
+    background-color: black;
+    color: white;
+    font-size: 30px;
+}
+
+.container{
+    background-color: rgb(0, 0, 0);
+    color: blue;
+    display: flexbox;
+    justify-items: center;
+    align-content: center;
+
+    
+}
+
+.block{
+    background: linear-gradient(165deg, #00e1ff, #9762d4);
+    display: flexbox;
+    width: fit-content;
+    height: fit-content;
+    padding: 10px;
+    justify-items: center;
+    border-radius: 20px;
+}
+
+.input-block{
+    background-color: rgb(255, 255, 255);
+    padding: 10px;
+    border-radius: 30px;
+    margin-bottom: 20px;
+}
+
+.input-block input{
+    border: none;
+    font-size: 30px;
+    padding: 10px;
+    outline: none;
+}
+
+.input-block i{
+    font-size: 30px;
+    margin: 2px;
+    cursor: crosshair;
+    cursor: pointer;
+    
+}
+
+.block div{
+    width: 100%;
+}
+
+
+.block .output-block img{
+    margin-left: 25%;
+
+}
+
+
+
