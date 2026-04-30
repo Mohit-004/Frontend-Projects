@@ -1,13 +1,41 @@
+body {
+    background: #f5f7fa;
+}
+
+/* Completed Task */
 .completed {
     text-decoration: line-through;
     color: gray;
 }
 
+/* Priority Colors */
 .high { border-left: 5px solid red; }
 .medium { border-left: 5px solid orange; }
 .low { border-left: 5px solid green; }
 
+/* Dark Mode */
 .dark-mode {
     background-color: #121212;
     color: white;
+}
+
+.dark-mode .card {
+    background-color: #1e1e1e;
+    color: white;
+}
+
+.dark-mode .list-group-item {
+    background-color: #1e1e1e;
+    color: white;
+}
+
+.dark-mode input,
+.dark-mode select {
+    background-color: #2a2a2a;
+    color: white;
+    border: 1px solid #444;
+}
+
+.dark-mode .progress {
+    background-color: #333;
 }
