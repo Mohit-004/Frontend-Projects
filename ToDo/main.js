@@ -1,6 +1,8 @@
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-// Add Task
+/* =========================
+   ADD TASK
+========================= */
 function addTask() {
     let text = document.getElementById("taskInput").value;
     let date = document.getElementById("dueDate").value;
@@ -19,14 +21,20 @@ function addTask() {
     tasks.push(task);
     saveTasks();
     renderTasks();
+
+    document.getElementById("taskInput").value = "";
 }
 
-// Save to localStorage
+/* =========================
+   SAVE TASKS
+========================= */
 function saveTasks() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
-// Render Tasks
+/* =========================
+   RENDER TASKS
+========================= */
 function renderTasks() {
     let list = document.getElementById("taskList");
     let search = document.getElementById("search").value.toLowerCase();
@@ -37,12 +45,13 @@ function renderTasks() {
 
     filtered.forEach(task => {
         let li = document.createElement("li");
+
         li.className = `list-group-item d-flex justify-content-between align-items-center ${task.priority.toLowerCase()}`;
 
         li.innerHTML = `
             <div onclick="toggleTask(${task.id})" style="cursor:pointer;">
                 <span class="${task.completed ? 'completed' : ''}">
-                    ${task.text} (${task.date})
+                    ${task.text} (${task.date || "No date"})
                 </span>
             </div>
             <div>
@@ -57,35 +66,47 @@ function renderTasks() {
     updateProgress();
 }
 
-// Toggle Complete
+/* =========================
+   TOGGLE COMPLETE
+========================= */
 function toggleTask(id) {
     tasks = tasks.map(t => {
         if (t.id === id) t.completed = !t.completed;
         return t;
     });
+
     saveTasks();
     renderTasks();
 }
 
-// Delete Task
+/* =========================
+   DELETE TASK
+========================= */
 function deleteTask(id) {
     tasks = tasks.filter(t => t.id !== id);
     saveTasks();
     renderTasks();
 }
 
-// Edit Task
+/* =========================
+   EDIT TASK
+========================= */
 function editTask(id) {
     let newText = prompt("Edit task:");
+    if (!newText) return;
+
     tasks = tasks.map(t => {
         if (t.id === id) t.text = newText;
         return t;
     });
+
     saveTasks();
     renderTasks();
 }
 
-// Progress Bar
+/* =========================
+   PROGRESS BAR
+========================= */
 function updateProgress() {
     let completed = tasks.filter(t => t.completed).length;
     let total = tasks.length;
@@ -97,5 +118,33 @@ function updateProgress() {
     bar.innerText = Math.round(percent) + "%";
 }
 
-// Initial Load
+/* =========================
+   DARK MODE
+========================= */
+function toggleDarkMode() {
+    document.body.classList.toggle("dark-mode");
+
+    let isDark = document.body.classList.contains("dark-mode");
+    localStorage.setItem("darkMode", isDark);
+
+    let btn = document.getElementById("themeBtn");
+    btn.innerText = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
+}
+
+/* Load saved theme */
+function loadTheme() {
+    let isDark = localStorage.getItem("darkMode") === "true";
+
+    if (isDark) {
+        document.body.classList.add("dark-mode");
+    }
+
+    let btn = document.getElementById("themeBtn");
+    btn.innerText = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
+}
+
+/* =========================
+   INITIAL LOAD
+========================= */
+loadTheme();
 renderTasks();
