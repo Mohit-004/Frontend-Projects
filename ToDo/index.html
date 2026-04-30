@@ -8,36 +8,21 @@
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <style>
-        body {
-            background: #f5f7fa;
-        }
-
-        .completed {
-            text-decoration: line-through;
-            color: gray;
-        }
-
-        .high { border-left: 5px solid red; }
-        .medium { border-left: 5px solid orange; }
-        .low { border-left: 5px solid green; }
-
-        .dark-mode {
-            background-color: #121212;
-            color: white;
-        }
-
-        .container {
-            max-width: 600px;
-        }
-    </style>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <div class="container mt-5">
 
-    <h2 class="text-center mb-4">🚀 Smart Todo App</h2>
+    <!-- Header + Dark Mode -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>🚀 Smart Todo App</h2>
+        <button id="themeBtn" onclick="toggleDarkMode()" class="btn btn-dark btn-sm">
+            🌙 Dark Mode
+        </button>
+    </div>
 
     <!-- Input Section -->
     <div class="card p-3 shadow">
@@ -57,7 +42,7 @@
     <!-- Search -->
     <input type="text" id="search" class="form-control mt-3" placeholder="Search task..." onkeyup="renderTasks()">
 
-    <!-- Progress Bar -->
+    <!-- Progress -->
     <div class="progress mt-3">
         <div id="progressBar" class="progress-bar bg-success" style="width: 0%">0%</div>
     </div>
@@ -67,114 +52,8 @@
 
 </div>
 
-<!-- JavaScript -->
-<script>
-let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-
-// Add Task
-function addTask() {
-    let text = document.getElementById("taskInput").value;
-    let date = document.getElementById("dueDate").value;
-    let priority = document.getElementById("priority").value;
-
-    if (text === "") return alert("Enter task!");
-
-    let task = {
-        id: Date.now(),
-        text,
-        date,
-        priority,
-        completed: false
-    };
-
-    tasks.push(task);
-    saveTasks();
-    renderTasks();
-
-    document.getElementById("taskInput").value = "";
-}
-
-// Save
-function saveTasks() {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-}
-
-// Render
-function renderTasks() {
-    let list = document.getElementById("taskList");
-    let search = document.getElementById("search").value.toLowerCase();
-
-    list.innerHTML = "";
-
-    let filtered = tasks.filter(t => t.text.toLowerCase().includes(search));
-
-    filtered.forEach(task => {
-        let li = document.createElement("li");
-        li.className = `list-group-item d-flex justify-content-between align-items-center ${task.priority.toLowerCase()}`;
-
-        li.innerHTML = `
-            <div onclick="toggleTask(${task.id})" style="cursor:pointer;">
-                <span class="${task.completed ? 'completed' : ''}">
-                    ${task.text} (${task.date || "No date"})
-                </span>
-            </div>
-            <div>
-                <button class="btn btn-sm btn-warning" onclick="editTask(${task.id})">Edit</button>
-                <button class="btn btn-sm btn-danger" onclick="deleteTask(${task.id})">Delete</button>
-            </div>
-        `;
-
-        list.appendChild(li);
-    });
-
-    updateProgress();
-}
-
-// Toggle
-function toggleTask(id) {
-    tasks = tasks.map(t => {
-        if (t.id === id) t.completed = !t.completed;
-        return t;
-    });
-    saveTasks();
-    renderTasks();
-}
-
-// Delete
-function deleteTask(id) {
-    tasks = tasks.filter(t => t.id !== id);
-    saveTasks();
-    renderTasks();
-}
-
-// Edit
-function editTask(id) {
-    let newText = prompt("Edit task:");
-    if (!newText) return;
-
-    tasks = tasks.map(t => {
-        if (t.id === id) t.text = newText;
-        return t;
-    });
-
-    saveTasks();
-    renderTasks();
-}
-
-// Progress
-function updateProgress() {
-    let completed = tasks.filter(t => t.completed).length;
-    let total = tasks.length;
-
-    let percent = total === 0 ? 0 : (completed / total) * 100;
-
-    let bar = document.getElementById("progressBar");
-    bar.style.width = percent + "%";
-    bar.innerText = Math.round(percent) + "%";
-}
-// Initial Load
-renderTasks();
-</script>
+<!-- JS -->
+<script src="script.js"></script>
 
 </body>
 </html>
