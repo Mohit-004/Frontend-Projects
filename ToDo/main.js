@@ -1,16 +1,48 @@
+/* =========================
+   STATE MANAGEMENT
+========================= */
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+/* =========================
+   DOM CACHE
+========================= */
+const DOM = {
+    taskInput: document.getElementById("taskInput"),
+    dueDate: document.getElementById("dueDate"),
+    priority: document.getElementById("priority"),
+    taskList: document.getElementById("taskList"),
+    search: document.getElementById("search"),
+    progressBar: document.getElementById("progressBar"),
+    themeBtn: document.getElementById("themeBtn")
+};
+
+/* =========================
+   UTIL FUNCTIONS
+========================= */
+const saveTasks = () => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+};
+
+const updateState = (newTasks) => {
+    tasks = newTasks;
+    saveTasks();
+    renderTasks();
+};
 
 /* =========================
    ADD TASK
 ========================= */
 function addTask() {
-    let text = document.getElementById("taskInput").value;
-    let date = document.getElementById("dueDate").value;
-    let priority = document.getElementById("priority").value;
+    const text = DOM.taskInput.value.trim();
+    const date = DOM.dueDate.value;
+    const priority = DOM.priority.value;
 
-    if (text === "") return alert("Enter task!");
+    if (!text) {
+        alert("Enter task!");
+        return;
+    }
 
-    let task = {
+    const task = {
         id: Date.now(),
         text,
         date,
@@ -18,133 +50,131 @@ function addTask() {
         completed: false
     };
 
-    tasks.push(task);
-    saveTasks();
-    renderTasks();
+    updateState([...tasks, task]);
 
-    document.getElementById("taskInput").value = "";
-}
-
-/* =========================
-   SAVE TASKS
-========================= */
-function saveTasks() {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
+    DOM.taskInput.value = "";
 }
 
 /* =========================
    RENDER TASKS
 ========================= */
 function renderTasks() {
-    let list = document.getElementById("taskList");
-    let search = document.getElementById("search").value.toLowerCase();
+    const searchText = DOM.search.value.toLowerCase();
 
-    list.innerHTML = "";
+    const filteredTasks = tasks.filter(t =>
+        t.text.toLowerCase().includes(searchText)
+    );
 
-    let filtered = tasks.filter(t => t.text.toLowerCase().includes(search));
-
-    filtered.forEach(task => {
-        let li = document.createElement("li");
-
-        li.className = `list-group-item d-flex justify-content-between align-items-center ${task.priority.toLowerCase()}`;
-
-        li.innerHTML = `
-            <div onclick="toggleTask(${task.id})" style="cursor:pointer;">
+    DOM.taskList.innerHTML = filteredTasks.map(task => `
+        <li class="list-group-item d-flex justify-content-between align-items-center ${task.priority.toLowerCase()}">
+            <div data-id="${task.id}" class="task-text" style="cursor:pointer;">
                 <span class="${task.completed ? 'completed' : ''}">
                     ${task.text} (${task.date || "No date"})
                 </span>
             </div>
             <div>
-                <button class="btn btn-sm btn-warning" onclick="editTask(${task.id})">Edit</button>
-                <button class="btn btn-sm btn-danger" onclick="deleteTask(${task.id})">Delete</button>
+                <button class="btn btn-sm btn-warning edit-btn" data-id="${task.id}">Edit</button>
+                <button class="btn btn-sm btn-danger delete-btn" data-id="${task.id}">Delete</button>
             </div>
-        `;
-
-        list.appendChild(li);
-    });
+        </li>
+    `).join("");
 
     updateProgress();
 }
 
 /* =========================
-   TOGGLE COMPLETE
+   EVENT DELEGATION
+========================= */
+DOM.taskList.addEventListener("click", (e) => {
+    const id = Number(e.target.dataset.id);
+
+    if (e.target.classList.contains("delete-btn")) {
+        deleteTask(id);
+    }
+
+    if (e.target.classList.contains("edit-btn")) {
+        editTask(id);
+    }
+
+    if (e.target.closest(".task-text")) {
+        toggleTask(id);
+    }
+});
+
+/* =========================
+   TASK OPERATIONS
 ========================= */
 function toggleTask(id) {
-    tasks = tasks.map(t => {
-        if (t.id === id) t.completed = !t.completed;
-        return t;
-    });
-
-    saveTasks();
-    renderTasks();
+    updateState(
+        tasks.map(t =>
+            t.id === id ? { ...t, completed: !t.completed } : t
+        )
+    );
 }
 
-/* =========================
-   DELETE TASK
-========================= */
 function deleteTask(id) {
-    tasks = tasks.filter(t => t.id !== id);
-    saveTasks();
-    renderTasks();
+    if (!confirm("Delete this task?")) return;
+
+    updateState(tasks.filter(t => t.id !== id));
 }
 
-/* =========================
-   EDIT TASK
-========================= */
 function editTask(id) {
-    let newText = prompt("Edit task:");
-    if (!newText) return;
+    const task = tasks.find(t => t.id === id);
+    if (!task) return;
 
-    tasks = tasks.map(t => {
-        if (t.id === id) t.text = newText;
-        return t;
-    });
+    const newText = prompt("Edit task:", task.text);
+    if (!newText || !newText.trim()) return;
 
-    saveTasks();
-    renderTasks();
+    updateState(
+        tasks.map(t =>
+            t.id === id ? { ...t, text: newText.trim() } : t
+        )
+    );
 }
 
 /* =========================
    PROGRESS BAR
 ========================= */
 function updateProgress() {
-    let completed = tasks.filter(t => t.completed).length;
-    let total = tasks.length;
+    const total = tasks.length;
+    const completed = tasks.filter(t => t.completed).length;
 
-    let percent = total === 0 ? 0 : (completed / total) * 100;
+    const percent = total ? (completed / total) * 100 : 0;
 
-    let bar = document.getElementById("progressBar");
-    bar.style.width = percent + "%";
-    bar.innerText = Math.round(percent) + "%";
+    DOM.progressBar.style.width = percent + "%";
+    DOM.progressBar.innerText = `${Math.round(percent)}%`;
 }
 
 /* =========================
    DARK MODE
 ========================= */
 function toggleDarkMode() {
-    document.body.classList.toggle("dark-mode");
-
-    let isDark = document.body.classList.contains("dark-mode");
+    const isDark = document.body.classList.toggle("dark-mode");
     localStorage.setItem("darkMode", isDark);
 
-    let btn = document.getElementById("themeBtn");
-    btn.innerText = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
+    DOM.themeBtn.innerText = isDark
+        ? "☀️ Light Mode"
+        : "🌙 Dark Mode";
 }
 
-/* Load saved theme */
 function loadTheme() {
-    let isDark = localStorage.getItem("darkMode") === "true";
+    const isDark = localStorage.getItem("darkMode") === "true";
 
-    if (isDark) {
-        document.body.classList.add("dark-mode");
-    }
+    document.body.classList.toggle("dark-mode", isDark);
 
-    let btn = document.getElementById("themeBtn");
-    btn.innerText = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
+    DOM.themeBtn.innerText = isDark
+        ? "☀️ Light Mode"
+        : "🌙 Dark Mode";
 }
 
 /* =========================
-   INITIAL LOAD
+   INIT
 ========================= */
-loadTheme();
-renderTasks();
+function init() {
+    loadTheme();
+    renderTasks();
+
+    DOM.search.addEventListener("input", renderTasks);
+}
+
+init();
