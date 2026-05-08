@@ -9,41 +9,47 @@ function saveNotes() {
 
 
 function displayNotes(filteredNotes = notes) {
-  const container = document.getElementById("notesContainer");
 
-  // Clear old notes
-  container.innerHTML = "";
+  const container =
+    document.getElementById("notesContainer");
 
-  // If no notes found
+  // No notes found
   if (filteredNotes.length === 0) {
     container.innerHTML = `
-      <p style="margin-top:10px; color:gray;">
+      <p class="empty-message">
         No notes found
       </p>
     `;
     return;
   }
 
-   // Loop through notes
-  filteredNotes.forEach((note, index) => {
-    container.innerHTML += `
+  // Generate notes HTML
+  const notesHTML = filteredNotes
+    .map((note, index) => `
       <div class="note">
+
         <p>${note.text}</p>
 
-        <small style="color: gray;">
+        <small>
           ${note.date}
         </small>
 
-        <br>
+        <div class="note-buttons">
 
-        <button onclick="editNote(${index})">
-          ✏ Edit
-        </button>
+          <button onclick="editNote(${index})">
+            ✏ Edit
+          </button>
 
-        <button onclick="deleteNote(${index})">
-          🗑 Delete
-        </button>
+          <button onclick="deleteNote(${index})">
+            🗑 Delete
+          </button>
+
+        </div>
+
       </div>
-    `;
-  });
+    `)
+    .join("");
+
+  // Update DOM once
+  container.innerHTML = notesHTML;
 }
