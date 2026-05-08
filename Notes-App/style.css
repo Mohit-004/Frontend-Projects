@@ -147,3 +147,18 @@ button:hover {
   background: #ccc;
   border-radius: 10px;
 }
+
+.empty-message {
+  margin-top: 15px;
+  color: gray;
+  font-size: 14px;
+}
+
+.note small {
+  color: gray;
+  font-size: 12px;
+}
+
+.note-buttons {
+  margin-top: 10px;
+}
