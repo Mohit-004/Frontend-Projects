@@ -1,26 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Notes App</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>Advanced Notes App</title>
+
+  <!-- Google Font -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
+  <!-- Main Container -->
   <div class="container">
-    <h1>Notes App</h1>
 
-    <!-- Search -->
-    <input type="text" id="search" placeholder="Search notes...">
+    <!-- Header -->
+    <div class="header">
 
-    <!-- Add Note -->
-    <textarea id="noteInput" placeholder="Write your note..."></textarea>
-    <button onclick="addNote()">Add Note</button>
+      <h1>📝 Notes App</h1>
 
-    <!-- Notes List -->
+      <!-- Dark Mode Toggle -->
+      <button id="themeToggle">
+        🌙
+      </button>
+
+    </div>
+
+    <!-- Search Section -->
+    <div class="search-box">
+
+      <input
+        type="text"
+        id="search"
+        placeholder="Search notes..."
+      />
+
+    </div>
+
+    <!-- Add Note Section -->
+    <div class="input-section">
+
+      <textarea
+        id="noteInput"
+        placeholder="Write your note here..."
+      ></textarea>
+
+      <!-- Buttons -->
+      <div class="action-buttons">
+
+        <button id="addBtn" onclick="addNote()">
+          ➕ Add Note
+        </button>
+
+        <button id="clearBtn" onclick="clearAllNotes()">
+          🗑 Clear All
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- Stats Section -->
+    <div class="stats">
+
+      <div class="stat-card">
+        <h3 id="totalNotes">0</h3>
+        <p>Total Notes</p>
+      </div>
+
+      <div class="stat-card">
+        <h3 id="completedNotes">0</h3>
+        <p>Completed</p>
+      </div>
+
+    </div>
+
+    <!-- Filter Buttons -->
+    <div class="filters">
+
+      <button onclick="filterNotes('all')">
+        All
+      </button>
+
+      <button onclick="filterNotes('completed')">
+        Completed
+      </button>
+
+      <button onclick="filterNotes('pending')">
+        Pending
+      </button>
+
+    </div>
+
+    <!-- Notes Container -->
     <div id="notesContainer"></div>
+
   </div>
 
+  <!-- Toast Notification -->
+  <div id="toast"></div>
+
+  <!-- Script -->
   <script src="script.js"></script>
+
 </body>
 </html>
