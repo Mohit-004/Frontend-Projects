@@ -1,18 +1,24 @@
-<!-- Fronted -->
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
 
   <title>Password Generator</title>
 
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
   <div class="container">
 
+    <!-- Heading -->
     <h1>Password Generator</h1>
 
     <!-- Password Display -->
@@ -21,11 +27,14 @@
       id="password"
       placeholder="Generated Password"
       readonly
-    >
+    />
 
-    <!-- Length -->
+    <!-- Password Length -->
     <div class="input-group">
-      <label>Password Length:</label>
+
+      <label for="length">
+        Password Length
+      </label>
 
       <input
         type="number"
@@ -33,46 +42,84 @@
         min="4"
         max="30"
         value="12"
-      >
+      />
+
     </div>
 
-    <!-- Options -->
+    <!-- Password Options -->
     <div class="options">
 
+      <!-- Uppercase -->
       <label>
-        <input type="checkbox" id="uppercase" checked>
-        Uppercase
+
+        <input
+          type="checkbox"
+          id="uppercase"
+          checked
+        />
+
+        Uppercase Letters
+
       </label>
 
+      <!-- Lowercase -->
       <label>
-        <input type="checkbox" id="lowercase" checked>
-        Lowercase
+
+        <input
+          type="checkbox"
+          id="lowercase"
+          checked
+        />
+
+        Lowercase Letters
+
       </label>
 
+      <!-- Numbers -->
       <label>
-        <input type="checkbox" id="numbers" checked>
+
+        <input
+          type="checkbox"
+          id="numbers"
+          checked
+        />
+
         Numbers
+
       </label>
 
+      <!-- Symbols -->
       <label>
-        <input type="checkbox" id="symbols">
+
+        <input
+          type="checkbox"
+          id="symbols"
+        />
+
         Symbols
+
       </label>
 
     </div>
 
     <!-- Buttons -->
-    <button onclick="generatePassword()">
-      Generate Password
-    </button>
+    <div class="buttons">
 
-    <button onclick="copyPassword()">
-      Copy Password
-    </button>
+      <button onclick="generatePassword()">
+        Generate Password
+      </button>
+
+      <button onclick="copyPassword()">
+        Copy Password
+      </button>
+
+    </div>
 
   </div>
 
+  <!-- JavaScript -->
   <script src="script.js"></script>
 
 </body>
+
 </html>
