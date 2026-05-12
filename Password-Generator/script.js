@@ -1,56 +1,34 @@
-//Business Logic
+
+// =========================
+// BUSINESS LOGIC
+// =========================
 function generatePassword() {
 
-  // Get Inputs
+  // Inputs
   const length =
-    document.getElementById("length").value;
-
-  const uppercase =
-    document.getElementById("uppercase").checked;
-
-  const lowercase =
-    document.getElementById("lowercase").checked;
-
-  const numbers =
-    document.getElementById("numbers").checked;
-
-  const symbols =
-    document.getElementById("symbols").checked;
+    Number(document.getElementById("length").value);
 
   // Character Sets
-  const upperChars =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const charSets = {
+    uppercase: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    lowercase: "abcdefghijklmnopqrstuvwxyz",
+    numbers: "0123456789",
+    symbols: "!@#$%^&*()_+[]{}|;:,.<>?"
+  };
 
-  const lowerChars =
-    "abcdefghijklmnopqrstuvwxyz";
-
-  const numberChars =
-    "0123456789";
-
-  const symbolChars =
-    "!@#$%^&*()_+[]{}|;:,.<>?";
-
-  // Store all selected chars
+  // Build Character Pool
   let allChars = "";
 
-  if (uppercase) {
-    allChars += upperChars;
-  }
+  for (let key in charSets) {
 
-  if (lowercase) {
-    allChars += lowerChars;
-  }
+    if (document.getElementById(key).checked) {
+      allChars += charSets[key];
+    }
 
-  if (numbers) {
-    allChars += numberChars;
-  }
-
-  if (symbols) {
-    allChars += symbolChars;
   }
 
   // Validation
-  if (allChars === "") {
+  if (!allChars) {
     alert("Select at least one option!");
     return;
   }
@@ -71,18 +49,21 @@ function generatePassword() {
     password;
 }
 
-/* =========================
-   COPY PASSWORD
-========================= */
+// =========================
+// COPY PASSWORD
+// =========================
 function copyPassword() {
 
   const passwordField =
     document.getElementById("password");
 
-  // Select text
-  passwordField.select();
+  // Validation
+  if (!passwordField.value) {
+    alert("Generate password first!");
+    return;
+  }
 
-  // Copy text
+  // Copy Password
   navigator.clipboard.writeText(
     passwordField.value
   );
