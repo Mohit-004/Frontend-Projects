@@ -1,72 +1,59 @@
 
 // =========================
-// BUSINESS LOGIC
+// PASSWORD STRENGTH CHECKER
 // =========================
-function generatePassword() {
+function checkStrength(password) {
 
-  // Inputs
-  const length =
-    Number(document.getElementById("length").value);
+  const strengthText =
+    document.getElementById("strength");
 
-  // Character Sets
-  const charSets = {
-    uppercase: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-    lowercase: "abcdefghijklmnopqrstuvwxyz",
-    numbers: "0123456789",
-    symbols: "!@#$%^&*()_+[]{}|;:,.<>?"
-  };
+  // Default
+  let strength = "Weak";
 
-  // Build Character Pool
-  let allChars = "";
+  // Conditions
+  const hasUpper =
+    /[A-Z]/.test(password);
 
-  for (let key in charSets) {
+  const hasLower =
+    /[a-z]/.test(password);
 
-    if (document.getElementById(key).checked) {
-      allChars += charSets[key];
-    }
+  const hasNumber =
+    /[0-9]/.test(password);
 
+  const hasSymbol =
+    /[^A-Za-z0-9]/.test(password);
+
+  // Strong Password
+  if (
+    password.length >= 12 &&
+    hasUpper &&
+    hasLower &&
+    hasNumber &&
+    hasSymbol
+  ) {
+    strength = "Strong";
+    strengthText.style.color = "green";
   }
 
-  // Validation
-  if (!allChars) {
-    alert("Select at least one option!");
-    return;
+  // Medium Password
+  else if (
+    password.length >= 8 &&
+    (
+      (hasUpper && hasLower) ||
+      (hasNumber && hasSymbol)
+    )
+  ) {
+    strength = "Medium";
+    strengthText.style.color = "orange";
   }
 
-  // Generate Password
-  let password = "";
-
-  for (let i = 0; i < length; i++) {
-
-    const randomIndex =
-      Math.floor(Math.random() * allChars.length);
-
-    password += allChars[randomIndex];
+  // Weak Password
+  else {
+    strength = "Weak";
+    strengthText.style.color = "red";
   }
 
-  // Display Password
-  document.getElementById("password").value =
-    password;
-}
-
-// =========================
-// COPY PASSWORD
-// =========================
-function copyPassword() {
-
-  const passwordField =
-    document.getElementById("password");
-
-  // Validation
-  if (!passwordField.value) {
-    alert("Generate password first!");
-    return;
-  }
-
-  // Copy Password
-  navigator.clipboard.writeText(
-    passwordField.value
-  );
-
-  alert("Password copied!");
+  // Update UI
+  strengthText.innerText =
+    `Password Strength: ${strength}`;
 }
